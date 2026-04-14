@@ -1,0 +1,15 @@
+# Build
+target/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
