@@ -66,6 +66,12 @@
 		    <artifactId>flyway-mysql</artifactId>
 		    <version>10.17.0</version>
 		</dependency>
+		
+		<!-- Exceções -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 
     </dependencies>
 

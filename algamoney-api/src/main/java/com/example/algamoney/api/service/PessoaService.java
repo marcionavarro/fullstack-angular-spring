@@ -28,7 +28,7 @@ public class PessoaService {
 		pessoaRepository.save(pessoaSalva);
 	}
 	
-	private Pessoa buscarPessoaPeloCodigo(Long codigo) {
+	public Pessoa buscarPessoaPeloCodigo(Long codigo) {
 		Pessoa pessoaSalva = pessoaRepository.findById(codigo)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		return pessoaSalva;
