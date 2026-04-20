@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -30,11 +30,12 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
+import com.example.algamoney.api.security.UserDetailsService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 
@@ -44,6 +45,18 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class AuthorizationServerConfig {
 
+	@Bean
+	public AuthenticationProvider authenticationProvider(
+	        UserDetailsService userDetailsService,
+	        PasswordEncoder passwordEncoder) {
+	    DaoAuthenticationProvider provider =
+	            new DaoAuthenticationProvider(userDetailsService); // ✅ correto
+
+	    provider.setPasswordEncoder(passwordEncoder);
+
+	    return provider;
+	}
+	
 	@Bean
 	@Order(1)
 	public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -57,8 +70,9 @@ public class AuthorizationServerConfig {
 
 	@Bean
 	@Order(2)
-	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
 		http.securityMatcher("/login", "/logout", "/error")
+				.authenticationProvider(authenticationProvider)
 				.authorizeHttpRequests(auth -> auth.anyRequest()
 						.authenticated())
 				.formLogin(withDefaults())
@@ -70,13 +84,13 @@ public class AuthorizationServerConfig {
 	}
 
 	// 👤 USER LOGIN (IMPORTANTE PARA /login FUNCIONAR)
-	@Bean
-	public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-		return new InMemoryUserDetailsManager(User.withUsername("admin")
-				.password(encoder.encode("admin"))
-				.roles("USER")
-				.build());
-	}
+//	@Bean("authUserDetailsService")
+//	public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+//		return new InMemoryUserDetailsManager(User.withUsername("admin")
+//				.password(encoder.encode("admin"))
+//				.roles("USER")
+//				.build());
+//	}
 
 	// Registered client
 	@Bean
