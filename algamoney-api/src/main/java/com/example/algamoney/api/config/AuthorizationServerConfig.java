@@ -107,12 +107,20 @@ public class AuthorizationServerConfig {
 				.tokenSettings(TokenSettings.builder()
 //                        .authorizationCodeTimeToLive(Duration.ofMinutes(1)) // 👈 AQUI
 //                        .accessTokenTimeToLive(Duration.ofMinutes(30))
-						.accessTokenTimeToLive(Duration.ofSeconds(20))
+						.accessTokenTimeToLive(Duration.ofSeconds(1800))
 						.refreshTokenTimeToLive(Duration.ofHours(24))
 						.build())
 				.build();
+		
+		 RegisteredClient mobileClient = RegisteredClient.withId(UUID.randomUUID().toString())
+		            .clientId("mobile")
+		            .clientSecret(passwordEncoder.encode("m0b1l3"))
+		            .redirectUri("https://oauth.pstmn.io/v1/callback")
+		            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+		            .scope("read")
+		            .build();
 
-		return new InMemoryRegisteredClientRepository(client);
+		return new InMemoryRegisteredClientRepository(client, mobileClient);
 	}
 
 	@Bean
