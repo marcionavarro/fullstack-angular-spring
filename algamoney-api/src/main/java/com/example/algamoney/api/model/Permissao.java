@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "permissao")
-public class Persmissao {
+public class Permissao {
 
 	@Id
 	private Long codigo;
@@ -38,7 +38,7 @@ public class Persmissao {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Persmissao other = (Persmissao) obj;
+		Permissao other = (Permissao) obj;
 		return Objects.equals(codigo, other.codigo);
 	}
 	

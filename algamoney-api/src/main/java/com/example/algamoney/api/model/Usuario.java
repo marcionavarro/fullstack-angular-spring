@@ -24,7 +24,7 @@ public class Usuario {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuario_permissao", joinColumns = @JoinColumn(name = "codigo_usuario"), inverseJoinColumns = @JoinColumn(name = "codigo_permissao"))
-	private List<Persmissao> persmissoes;
+	private List<Permissao> permissoes;
 
 	public Long getCodigo() {
 		return codigo;
@@ -58,12 +58,12 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	public List<Persmissao> getPersmissoes() {
-		return persmissoes;
+	public List<Permissao> getPermissoes() {
+		return permissoes;
 	}
 
-	public void setPersmissoes(List<Persmissao> persmissoes) {
-		this.persmissoes = persmissoes;
+	public void setPersmissoes(List<Permissao> permissoes) {
+		this.permissoes = permissoes;
 	}
 
 	@Override
