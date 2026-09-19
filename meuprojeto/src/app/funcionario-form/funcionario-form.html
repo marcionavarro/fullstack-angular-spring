@@ -1,0 +1,14 @@
+@if (adicionado) {
+  <div class="alert alert-success">
+    Funcionário adicionado: <strong>{{ nome }}</strong>
+  </div>
+}
+
+<div class="form-group">
+  <label for="nome">Nome</label>
+  <input type="text" class="form-control mb-2" [(ngModel)]="nome" (focus)="adicionado = false" />
+</div>
+
+<button class="btn btn-primary" type="button" (click)="adicionar()" [disabled]="nome.length == 0">
+  Adicionar
+</button>
